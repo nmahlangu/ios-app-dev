@@ -15,6 +15,8 @@ class CalculatorBrain
     {
         // 0,1,2,3,4,5,6,7,8,9
         case Operand(Double)
+        // π
+        case NullaryOperation(String)
         // sqrt, sin, cos
         case UnaryOperation(String, Double -> Double)
         // ×, ÷, +, −
@@ -30,6 +32,8 @@ class CalculatorBrain
                 {
                 case .Operand(let operand):
                     return "\(operand)"
+                case .NullaryOperation(let symbol):
+                    return symbol
                 case .UnaryOperation(let symbol, _):
                     return symbol
                 case .BinaryOperation(let symbol, _):
@@ -52,11 +56,20 @@ class CalculatorBrain
         {
             knownOps[op.description] = op
         }
+        
+        // Nullary Operations
+        learnOp(Op.NullaryOperation("π"))
+            
+        // Unary Operations
+        learnOp(Op.UnaryOperation("√", sqrt))
+        learnOp(Op.UnaryOperation("sin", sin))
+        learnOp(Op.UnaryOperation("cos", cos))
+        
+        // Binary Operations
         learnOp(Op.BinaryOperation("×", *))
         learnOp(Op.BinaryOperation("÷") {$1 / $0})
         learnOp(Op.BinaryOperation("+", +))
         learnOp(Op.BinaryOperation("−") {$1 - $0})
-        learnOp(Op.UnaryOperation("√", sqrt))
     }
     
     // Recursively evaluates what's on the stack
@@ -73,6 +86,9 @@ class CalculatorBrain
             // Returns the number on top of the stack and the remaining stack
             case .Operand(let operand):
                 return (operand, remainingOps)
+            // Returns the number π off the top of the stack and the remaining stack
+            case .NullaryOperation(let operation):
+                return (M_PI, remainingOps)
             // `operation` here will be a function, e.g. sqrt or cos. `operation`
             // will be applied to the result of recursively evaluating the rest
             // of the stack until a number is gotten at the top
