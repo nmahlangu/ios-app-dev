@@ -6,12 +6,13 @@
 //  Copyright (c) 2015 Nicholas Mahlangu. All rights reserved.
 //
 
-// importing the UI portion
+// Importing the UI portion
 import UIKit
 
 // ViewController inherits from UIViewController
 // Swift only supports single inheritance
-class ViewController: UIViewController {
+class ViewController: UIViewController
+{
     
     // Optionals are automatically set to nil. ! always unwraps `display`
     // when it is used somewhere in the code (implicitly unwrapped optional)
@@ -19,7 +20,10 @@ class ViewController: UIViewController {
     
     // Indicates if the user is typing or not
     var userIsInTheMiddleOfTypingANumber = false
+    
+    let brain = CalculatorBrain()
 
+    // Appends a digit to the top label
     @IBAction func appendDigit(sender: UIButton)
     {
         // ! is unwrapping currentTitle which is an optional (String?)
@@ -35,41 +39,49 @@ class ViewController: UIViewController {
         }
     }
     
-    // Calls the correct operation on the top 2 elemtns of operandStack
+    // Is called when the user presses one of the operations ×, ÷, +, −
     @IBAction func operate(sender: UIButton)
     {
-        let operation = sender.currentTitle!
+        // Stop typing of the user didn't hit enter before an operand
         if userIsInTheMiddleOfTypingANumber
         {
            enter()
         }
-        switch operation
+        // currentTitle gets the text that is being displayed on the button.
+        // operation will be one of ×, ÷, +, −
+        if let operation = sender.currentTitle
         {
-        case "×": performOperation {$0 * $1}
-        case "÷": performOperation {$1 / $0}
-        case "+": performOperation {$0 + $1}
-        case "−": performOperation {$1 - $0}
-        default: break
+            if let result = brain.performOperation(operation)
+            {
+                // Set the display value to the result of the operation
+                // that was just performed
+                displayValue = result
+            }
+            else
+            {
+                // This means the operation failed. Putting a 0 in the display is a
+                // temporary solution
+                displayValue = 0
+            }
         }
     }
     
-    // Performs an operation on the top 2 elements of the operandStack
-    func performOperation(operation: (Double,Double) -> Double)
+    // Is used to update the value of the display at all times. Always pushes a number
+    // onto the stack
+    @IBAction func enter()
     {
-        if operandStack.count >= 2
-        {
-            displayValue = operation(operandStack.removeLast(), operandStack.removeLast())
-            enter()
-        }
-    }
-    
-    
-    // Adds the number in the display to the internal stack
-    var operandStack: [Double] = []
-    @IBAction func enter() {
         userIsInTheMiddleOfTypingANumber = false
-        operandStack.append(displayValue)
-        println(operandStack)
+        // Pushes a number onto the stack
+        if let result = brain.pushOperand(displayValue)
+        {
+            displayValue = result
+        }
+        else
+        {
+            // Fix this to make it be an optional.
+            // Want to have it put up an error message here
+            displayValue = 0
+        }
     }
     
     // Is a Computed Property
