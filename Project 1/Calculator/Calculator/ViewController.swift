@@ -59,9 +59,8 @@ class ViewController: UIViewController
             }
             else
             {
-                // This means the operation failed. Putting a 0 in the display is a
-                // temporary solution
-                displayValue = 0
+                // Error
+                displayValue = nil
             }
         }
     }
@@ -71,31 +70,61 @@ class ViewController: UIViewController
     @IBAction func enter()
     {
         userIsInTheMiddleOfTypingANumber = false
-        // Pushes a number onto the stack
-        if let result = brain.pushOperand(displayValue)
+        // Make sure the user has entered a valid double
+        if (displayValue != nil)
         {
-            displayValue = result
-        }
-        else
-        {
-            // Fix this to make it be an optional.
-            // Want to have it put up an error message here
-            displayValue = 0
+            // Pushes a number onto the stack
+            if let result = brain.pushOperand(displayValue!)
+            {
+                displayValue = result
+            }
+            else
+            {
+                // Error
+                displayValue = nil
+            }
         }
     }
     
     // Is a Computed Property
-    var displayValue: Double
+    var displayValue: Double?
     {
         get
         {
-            return NSNumberFormatter().numberFromString(display.text!)!.doubleValue
+            if occurrences(display.text!, c: ".") < 2
+            {
+                return NSNumberFormatter().numberFromString(display.text!)!.doubleValue
+            }
+            // Return nil if invalid float (more than 1 ".")
+            return nil
         }
         set
         {
-            display.text = "\(newValue)"
+            // Put up an error if the user messed up, or the correct value
+            if (newValue != nil)
+            {
+                display.text = "\(newValue!)"
+            }
+            else
+            {
+                display.text = "Error"
+            }
             userIsInTheMiddleOfTypingANumber = false
         }
+    }
+    
+    // Counts the number of occurrences of a specified character in a string
+    func occurrences(s: String, c: Character) -> Int
+    {
+        var occ_count = 0
+        for ch in s
+        {
+            if ch == c
+            {
+                occ_count += 1
+            }
+        }
+        return occ_count
     }
 }
 
