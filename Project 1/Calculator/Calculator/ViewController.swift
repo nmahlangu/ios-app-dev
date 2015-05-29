@@ -126,5 +126,12 @@ class ViewController: UIViewController
         }
         return occ_count
     }
+    
+    @IBAction func clear()
+    {
+        brain.clear()
+        displayValue = 0
+    }
+    
 }
 

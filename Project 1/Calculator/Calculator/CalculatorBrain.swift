@@ -148,4 +148,10 @@ class CalculatorBrain
         }
         return evaluate()
     }
+    
+    // Empties the operand stack and resets the calculator
+    func clear()
+    {
+        opStack = []
+    }
 }
