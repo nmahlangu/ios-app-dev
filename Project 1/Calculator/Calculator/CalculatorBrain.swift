@@ -8,11 +8,9 @@
 
 import Foundation
 
-class CalculatorBrain
-{
+class CalculatorBrain {
     // This enum implements the protocal Printable
-    private enum Op: Printable
-    {
+    private enum Op: Printable {
         // 0,1,2,3,4,5,6,7,8,9
         case Operand(Double)
         // π
@@ -24,12 +22,9 @@ class CalculatorBrain
         
         // Teaches the enum how to print itself. It has to be a variable
         // called description. 
-        var description: String
-        {
-            get
-            {
-                switch self
-                {
+        var description: String {
+            get {
+                switch self {
                 case .Operand(let operand):
                     return "\(operand)"
                 case .NullaryOperation(let symbol):
@@ -49,11 +44,9 @@ class CalculatorBrain
     // This is a dictionary; key is a string, value is an Op
     private var knownOps = [String: Op]()
     
-    init()
-    {
+    init() {
         // You can define functions in other functions
-        func learnOp(op: Op)
-        {
+        func learnOp(op: Op) {
             knownOps[op.description] = op
         }
         
@@ -73,16 +66,13 @@ class CalculatorBrain
     }
     
     // Recursively evaluates what's on the stack
-    private func evaluate(ops: [Op]) -> (result: Double?, remainingOps: [Op])
-    {
-        if !ops.isEmpty
-        {
+    private func evaluate(ops: [Op]) -> (result: Double?, remainingOps: [Op]) {
+        if !ops.isEmpty {
             // Removes the last element of the stack. The switch statement
             // essentially matches on the different cases of the last element
             var remainingOps = ops
             let op = remainingOps.removeLast()
-            switch op
-            {
+            switch op {
             // Returns the number on top of the stack and the remaining stack
             case .Operand(let operand):
                 return (operand, remainingOps)
@@ -94,8 +84,7 @@ class CalculatorBrain
             // of the stack until a number is gotten at the top
             case .UnaryOperation(_, let operation):
                 let operandEvaluation = evaluate(remainingOps)
-                if let operand = operandEvaluation.result
-                {
+                if let operand = operandEvaluation.result {
                     return (operation(operand), operandEvaluation.remainingOps)
                 }
             // `operation` here will be a function, e.g. × or ÷. `operation` will be
@@ -104,12 +93,10 @@ class CalculatorBrain
             case .BinaryOperation(_, let operation):
                 // Recursively compute the first number
                 let op1Evaluation = evaluate(remainingOps)
-                if let operand1 = op1Evaluation.result
-                {
+                if let operand1 = op1Evaluation.result {
                     // Recursively compute the second number
                     let op2Evaluation = evaluate(op1Evaluation.remainingOps)
-                    if let operand2 = op2Evaluation.result
-                    {
+                    if let operand2 = op2Evaluation.result {
                         return (operation(operand1,operand2), op2Evaluation.remainingOps)
                     }
                 }
@@ -142,52 +129,15 @@ class CalculatorBrain
     // Performs an operation
     func performOperation(symbol: String) -> Double?
     {
-        if let operation = knownOps[symbol]
-        {
+        if let operation = knownOps[symbol] {
             opStack.append(operation)
         }
         return evaluate()
     }
     
     // Empties the operand stack and resets the calculator
-    func clear()
-    {
-        // TODO: clear the history of every operand
+    func clear() {
+        // clear the history of every operand
         opStack = []
     }
-    
-    // Shows the history of very operand and operation input by the user
-    // BUGGY
-//    private func printHistory(ops: [Op]) -> String?
-//    {
-//        var remainingOps = ops
-//        let op = remainingOps.removeLast()
-//        switch op
-//        {
-//        case .Operand(let operand):
-//            return "\(operand)"
-//        case .NullaryOperation(let operation):
-//            return "\(M_PI)"
-//        case .UnaryOperation(let symbol, let operation):
-//            let printEvaluation = printHistory(remainingOps)
-//            if printEvaluation != nil
-//            {
-//                return "\(symbol)(\(printEvaluation))"
-//            }
-//        case .BinaryOperation(let symbol, let operation):
-//            let print1Evaluation = printHistory(remainingOps)
-//            if print1Evaluation != nil
-//            {
-//                var fewerRemainingOps = remainingOps
-//                fewerRemainingOps.removeLast()
-//                let print2Evaluation = printHistory(fewerRemainingOps)
-//                if print2Evaluation != nil
-//                {
-//                    return "\(print1Evaluation)\(symbol)\(print2Evaluation)"
-//                }
-//            }
-//        }
-//        
-//        return nil
-//    }
 }

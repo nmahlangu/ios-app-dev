@@ -11,8 +11,7 @@ import UIKit
 
 // ViewController inherits from UIViewController
 // Swift only supports single inheritance
-class ViewController: UIViewController
-{
+class ViewController: UIViewController {
     
     // Optionals are automatically set to nil. ! always unwraps `display`
     // when it is used somewhere in the code (implicitly unwrapped optional)
@@ -25,16 +24,12 @@ class ViewController: UIViewController
     let brain = CalculatorBrain()
 
     // Appends a digit to the top label
-    @IBAction func appendDigit(sender: UIButton)
-    {
+    @IBAction func appendDigit(sender: UIButton) {
         // ! is unwrapping currentTitle which is an optional (String?)
         let digit = sender.currentTitle!
-        if userIsInTheMiddleOfTypingANumber
-        {
+        if userIsInTheMiddleOfTypingANumber {
             display.text = display.text! + digit
-        }
-        else
-        {
+        } else {
             display.text = digit
             userIsInTheMiddleOfTypingANumber = true
         }
@@ -44,24 +39,19 @@ class ViewController: UIViewController
     @IBAction func operate(sender: UIButton)
     {
         // Stop typing of the user didn't hit enter before an operand
-        if userIsInTheMiddleOfTypingANumber
-        {
+        if userIsInTheMiddleOfTypingANumber {
            enter()
         }
         // currentTitle gets the text that is being displayed on the button.
         // operation will be one of ×, ÷, +, −
-        if let operation = sender.currentTitle
-        {
+        if let operation = sender.currentTitle {
             // Add operation to history
             secondDisplay.text = secondDisplay.text! + ", \(operation)"
-            if let result = brain.performOperation(operation)
-            {
+            if let result = brain.performOperation(operation) {
                 // Set the display value to the result of the operation
                 // that was just performed
                 displayValue = result
-            }
-            else
-            {
+            } else {
                 // Error
                 displayValue = nil
             }
@@ -77,11 +67,9 @@ class ViewController: UIViewController
         if (displayValue != nil)
         {
             // Add operand/operation to history
-            if secondDisplay.text == "No History"
-            {
+            if secondDisplay.text == "No History" {
                 secondDisplay.text = "\(displayValue!)"
-            }
-            else
+            } else
             {
                secondDisplay.text = secondDisplay.text! + ", \(displayValue!)"
             }
@@ -90,8 +78,7 @@ class ViewController: UIViewController
             if let result = brain.pushOperand(displayValue!)
             {
                 displayValue = result
-            }
-            else
+            } else
             {
                 // Error
                 displayValue = nil
@@ -104,8 +91,7 @@ class ViewController: UIViewController
     {
         get
         {
-            if occurrences(display.text!, c: ".") < 2
-            {
+            if occurrences(display.text!, c: ".") < 2 {
                 return NSNumberFormatter().numberFromString(display.text!)!.doubleValue
             }
             // Return nil if invalid float (more than 1 ".")
@@ -114,12 +100,9 @@ class ViewController: UIViewController
         set
         {
             // Put up an error if the user messed up, or the correct value
-            if (newValue != nil)
-            {
+            if (newValue != nil) {
                 display.text = "\(newValue!)"
-            }
-            else
-            {
+            } else {
                 display.text = "Error"
             }
             userIsInTheMiddleOfTypingANumber = false
@@ -130,10 +113,8 @@ class ViewController: UIViewController
     func occurrences(s: String, c: Character) -> Int
     {
         var occ_count = 0
-        for ch in s
-        {
-            if ch == c
-            {
+        for ch in s {
+            if ch == c {
                 occ_count += 1
             }
         }
@@ -141,12 +122,10 @@ class ViewController: UIViewController
     }
     
     // Resets the calculator completely for the user
-    @IBAction func clear()
-    {
+    @IBAction func clear() {
         brain.clear()
         secondDisplay.text = "No History"
         displayValue = 0
     }
-    
 }
 
