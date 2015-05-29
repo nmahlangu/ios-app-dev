@@ -17,6 +17,7 @@ class ViewController: UIViewController
     // Optionals are automatically set to nil. ! always unwraps `display`
     // when it is used somewhere in the code (implicitly unwrapped optional)
     @IBOutlet weak var display: UILabel!
+    @IBOutlet weak var secondDisplay: UILabel!
     
     // Indicates if the user is typing or not
     var userIsInTheMiddleOfTypingANumber = false
@@ -51,6 +52,8 @@ class ViewController: UIViewController
         // operation will be one of ×, ÷, +, −
         if let operation = sender.currentTitle
         {
+            // Add operation to history
+            secondDisplay.text = secondDisplay.text! + ", \(operation)"
             if let result = brain.performOperation(operation)
             {
                 // Set the display value to the result of the operation
@@ -73,6 +76,16 @@ class ViewController: UIViewController
         // Make sure the user has entered a valid double
         if (displayValue != nil)
         {
+            // Add operand/operation to history
+            if secondDisplay.text == "No History"
+            {
+                secondDisplay.text = "\(displayValue!)"
+            }
+            else
+            {
+               secondDisplay.text = secondDisplay.text! + ", \(displayValue!)"
+            }
+            
             // Pushes a number onto the stack
             if let result = brain.pushOperand(displayValue!)
             {
@@ -127,9 +140,11 @@ class ViewController: UIViewController
         return occ_count
     }
     
+    // Resets the calculator completely for the user
     @IBAction func clear()
     {
         brain.clear()
+        secondDisplay.text = "No History"
         displayValue = 0
     }
     

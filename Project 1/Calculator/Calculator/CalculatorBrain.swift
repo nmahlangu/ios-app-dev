@@ -152,6 +152,42 @@ class CalculatorBrain
     // Empties the operand stack and resets the calculator
     func clear()
     {
+        // TODO: clear the history of every operand
         opStack = []
     }
+    
+    // Shows the history of very operand and operation input by the user
+    // BUGGY
+//    private func printHistory(ops: [Op]) -> String?
+//    {
+//        var remainingOps = ops
+//        let op = remainingOps.removeLast()
+//        switch op
+//        {
+//        case .Operand(let operand):
+//            return "\(operand)"
+//        case .NullaryOperation(let operation):
+//            return "\(M_PI)"
+//        case .UnaryOperation(let symbol, let operation):
+//            let printEvaluation = printHistory(remainingOps)
+//            if printEvaluation != nil
+//            {
+//                return "\(symbol)(\(printEvaluation))"
+//            }
+//        case .BinaryOperation(let symbol, let operation):
+//            let print1Evaluation = printHistory(remainingOps)
+//            if print1Evaluation != nil
+//            {
+//                var fewerRemainingOps = remainingOps
+//                fewerRemainingOps.removeLast()
+//                let print2Evaluation = printHistory(fewerRemainingOps)
+//                if print2Evaluation != nil
+//                {
+//                    return "\(print1Evaluation)\(symbol)\(print2Evaluation)"
+//                }
+//            }
+//        }
+//        
+//        return nil
+//    }
 }
