@@ -42,8 +42,19 @@ class ViewController: UIViewController {
             display.text = display.text!.substringToIndex(display.text!.endIndex.predecessor())
         }
         // If display is empty set it equal to 0
-        if display.text == "" {
+        if display.text == "" || display.text == "-" || display.text == "."{
             display.text = "0"
+        }
+    }
+    
+    // Negates the current number in the display
+    @IBAction func negate() {
+        // String already as = in it
+        if display.text!.rangeOfString("-") != nil {
+            display.text = display.text!.stringByReplacingOccurrencesOfString("-", withString: "")
+        }
+        else if display.text != "" && display.text != "0" && display.text != "0.0" {
+            display.text = "-" + display.text!
         }
     }
     
