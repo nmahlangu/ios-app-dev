@@ -64,6 +64,13 @@ class ViewController: UIViewController {
                 // Set the display value to the result of the operation
                 // that was just performed
                 displayValue = result
+                
+                // Add/remove `=` from the second display
+                if secondDisplay.text?.rangeOfString("=") != nil {
+                    var s = secondDisplay.text!
+                    secondDisplay.text = s.stringByReplacingOccurrencesOfString("=", withString: "")
+                }
+                secondDisplay.text = secondDisplay.text! + ", ="
             } else {
                 // Error
                 displayValue = nil
