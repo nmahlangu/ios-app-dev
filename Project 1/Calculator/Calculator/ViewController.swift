@@ -35,6 +35,19 @@ class ViewController: UIViewController {
         }
     }
     
+    // Removes the last digit from the display
+    // Sets it back to zero if user has deleted all content
+    @IBAction func backspace() {
+        if display.text != "" {
+            display.text = display.text!.substringToIndex(display.text!.endIndex.predecessor())
+        }
+        // If display is empty set it equal to 0
+        if display.text == "" {
+            display.text = "0"
+        }
+    }
+    
+    
     // Is called when the user presses one of the operations ×, ÷, +, −
     @IBAction func operate(sender: UIButton)
     {
@@ -69,8 +82,7 @@ class ViewController: UIViewController {
             // Add operand/operation to history
             if secondDisplay.text == "No History" {
                 secondDisplay.text = "\(displayValue!)"
-            } else
-            {
+            } else {
                secondDisplay.text = secondDisplay.text! + ", \(displayValue!)"
             }
             
@@ -78,8 +90,7 @@ class ViewController: UIViewController {
             if let result = brain.pushOperand(displayValue!)
             {
                 displayValue = result
-            } else
-            {
+            } else {
                 // Error
                 displayValue = nil
             }
@@ -100,7 +111,7 @@ class ViewController: UIViewController {
         set
         {
             // Put up an error if the user messed up, or the correct value
-            if (newValue != nil) {
+            if newValue != nil {
                 display.text = "\(newValue!)"
             } else {
                 display.text = "Error"
